@@ -1,0 +1,17 @@
+{
+  "version": "2.0",
+  "lastUpdate": "2026-07-19",
+  "count": 100,
+  "hashes": {
+    "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f": {"name": "EICAR-Test-File", "type": "test", "severity": 1},
+    "ed01ebfbc9eb5bbea545af4d01bf5f1071661840480439c6e5babe8e080e41aa": {"name": "WannaCry.Ransomware", "type": "ransomware", "severity": 4},
+    "027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b30f6b0d7d3a745": {"name": "NotPetya.Ransomware", "type": "ransomware", "severity": 4},
+    "0a73291ab5607aef7571571a27d44361226b87368f6531e0cf28e2ad29d9d7d5": {"name": "Emotet.Banker", "type": "trojan", "severity": 4},
+    "c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4": {"name": "LockBit.Ransomware", "type": "ransomware", "severity": 4},
+    "e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6": {"name": "Conti.Ransomware", "type": "ransomware", "severity": 4},
+    "f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7": {"name": "REvil.Ransomware", "type": "ransomware", "severity": 4},
+    "51b1dc1e1ceea09e2008a9956510eda8b4e451306fd921e301c6f8fb00aca982": {"name": "Test.Trojan.Sample", "type": "test", "severity": 4},
+    "1a442c6e1c9e2256d0378cfce90a799eb2070a53b637d8966c6ba0ef128196eb": {"name": "Test.Ransomware.Sample", "type": "test", "severity": 4},
+    "6b1a6af9267d7ad34a6a3c1737ffc6507638d272ba9601d237a90f4184deb12e": {"name": "Test.Realtime.Block", "type": "test", "severity": 4}
+  }
+}

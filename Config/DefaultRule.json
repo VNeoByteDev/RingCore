@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "product": "RingCore Security Guardian",
+  "company": "RingCore Security",
+  
+  "protection": {
+    "enabled": true,
+    "modules": {
+      "process": true,
+      "file": true,
+      "registry": true,
+      "network": true,
+      "boot": true,
+      "rootkit": true
+    }
+  },
+  
+  "scan": {
+    "quickScanPaths": [
+      "%SYSTEMROOT%\\System32",
+      "%SYSTEMROOT%\\SysWOW64",
+      "%APPDATA%",
+      "%LOCALAPPDATA%\\Temp"
+    ],
+    "exclusions": [
+      "%PROGRAMFILES%\\RingCore",
+      "%APPDATA%\\RingCore"
+    ],
+    "schedule": {
+      "enabled": false,
+      "frequency": "weekly",
+      "day": "sunday",
+      "time": "02:00"
+    }
+  },
+  
+  "firewall": {
+    "enabled": true,
+    "defaultAction": "allow",
+    "notifyOnBlock": true,
+    "rules": [
+      {
+        "name": "Block Known Malware",
+        "enabled": true,
+        "action": "block",
+        "processPattern": "*.exe",
+        "remoteAddress": "any"
+      }
+    ]
+  },
+  
+  "notification": {
+    "enabled": true,
+    "showTrayIcon": true,
+    "minimizeToTray": true,
+    "showThreatAlerts": true,
+    "playSound": true
+  },
+  
+  "update": {
+    "autoUpdate": true,
+    "checkInterval": 24,
+    "updateUrl": "https://update.ringcore.com"
+  },
+  
+  "logging": {
+    "enabled": true,
+    "logPath": "%APPDATA%\\RingCore\\Logs",
+    "maxSize": 10,
+    "retentionDays": 30
+  }
+}

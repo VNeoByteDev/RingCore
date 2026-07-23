@@ -1,0 +1,13 @@
+{
+    "autoStart": true,
+    "autoUpdateDB": true,
+    "bootProtection": true,
+    "fileProtection": true,
+    "minimizeToTray": true,
+    "networkProtection": true,
+    "processProtection": true,
+    "registryProtection": true,
+    "scanCompleteNotify": true,
+    "soundNotify": true,
+    "threatNotify": true
+}
