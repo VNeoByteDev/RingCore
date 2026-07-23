@@ -267,6 +267,29 @@
         }
         .download-meta span { display: flex; align-items: center; gap: 6px; }
 
+/* ═══ Disclaimer ═══ */
+.disclaimer {
+    border-top: 1px solid var(--border);
+    padding: 48px 24px;
+    background: rgba(14,21,37,0.4);
+}
+.disclaimer-inner {
+    max-width: 700px; margin: 0 auto; text-align: center;
+}
+.disclaimer-inner h3 {
+    font-size: 14px; font-weight: 700; color: var(--text-2); margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+.disclaimer-inner p {
+    font-size: 13px; color: var(--text-3); line-height: 1.8; max-width: 600px; margin: 0 auto;
+}
+.disclaimer-inner .heart {
+    display: inline-block; color: var(--danger); animation: heartbeat 1.5s ease infinite;
+}
+@keyframes heartbeat {
+    0%,100%{transform:scale(1)} 15%{transform:scale(1.2)} 30%{transform:scale(1)} 45%{transform:scale(1.15)}
+}
+
         /* ═══ Footer ═══ */
         footer {
             border-top: 1px solid var(--border); padding: 40px 24px;
@@ -496,6 +519,16 @@
         </div>
     </div>
 </section>
+
+<!-- ═══ Disclaimer ═══ -->
+<div class="disclaimer">
+    <div class="disclaimer-inner">
+        <h3>Disclaimer / 免责声明</h3>
+        <p>RingCore Security Guardian is a personal open-source project created by a primary school student (5th grade) as a learning experience in C++, Qt, and cybersecurity. This software is provided "as is" without warranty of any kind. While every effort has been made to ensure accuracy and security, the author makes no guarantees regarding the completeness, reliability, or suitability of this software for any particular purpose. Use at your own risk.</p>
+        <p style="margin-top:12px">RingCore Security Guardian 是一位五年级小学生作为编程学习项目开发的开源安全软件。本软件按「现状」提供，不附带任何形式的明示或暗示保证。作者已尽最大努力确保准确性和安全性，但不对软件的完整性、可靠性或适用于任何特定用途做出保证。使用本软件的风险由用户自行承担。</p>
+        <p style="margin-top:16px">Made with <span class="heart">&hearts;</span> by VNeoByteDev</p>
+    </div>
+</div>
 
 <!-- ═══ Footer ═══ -->
 <footer>
