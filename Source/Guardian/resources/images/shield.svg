@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <!-- Shield gradient - deep blue to teal -->
+    <linearGradient id="shieldGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A5F"/>
+      <stop offset="50%" stop-color="#0D2847"/>
+      <stop offset="100%" stop-color="#0A1929"/>
+    </linearGradient>
+    <!-- Ring glow gradient -->
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="50%" stop-color="#00BCD4"/>
+      <stop offset="100%" stop-color="#0097A7"/>
+    </linearGradient>
+    <!-- Inner glow -->
+    <radialGradient id="innerGlow" cx="50%" cy="45%" r="35%">
+      <stop offset="0%" stop-color="#00BCD4" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00BCD4" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Outer glow for ring -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Shield edge highlight -->
+    <linearGradient id="edgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4FC3F7" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0288D1" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle (optional, subtle) -->
+  <circle cx="128" cy="128" r="120" fill="#0B0E17" opacity="0.8"/>
+
+  <!-- Shield shape -->
+  <path d="M128 16 L228 56 L228 120 C228 175 180 220 128 240 C76 220 28 175 28 120 L28 56 Z"
+        fill="url(#shieldGrad)" stroke="url(#edgeGrad)" stroke-width="2"/>
+
+  <!-- Shield inner highlight (top edge) -->
+  <path d="M128 20 L224 58 L224 70 L128 40 L32 70 L32 58 Z"
+        fill="white" opacity="0.08"/>
+
+  <!-- Inner glow -->
+  <ellipse cx="128" cy="110" rx="70" ry="60" fill="url(#innerGlow)"/>
+
+  <!-- Ring (the core element) -->
+  <circle cx="128" cy="120" r="52" fill="none" stroke="url(#ringGrad)" stroke-width="6" filter="url(#glow)" opacity="0.95"/>
+
+  <!-- Ring highlight arc (top) -->
+  <path d="M80 105 A52 52 0 0 1 176 105" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+
+  <!-- Center dot (core) -->
+  <circle cx="128" cy="120" r="8" fill="url(#ringGrad)" filter="url(#glow)" opacity="0.9"/>
+  <circle cx="128" cy="120" r="4" fill="white" opacity="0.8"/>
+
+  <!-- Small decorative dots on ring -->
+  <circle cx="128" cy="68" r="3" fill="#00E5FF" opacity="0.7"/>
+  <circle cx="180" cy="120" r="3" fill="#00E5FF" opacity="0.5"/>
+  <circle cx="128" cy="172" r="3" fill="#00E5FF" opacity="0.7"/>
+  <circle cx="76" cy="120" r="3" fill="#00E5FF" opacity="0.5"/>
+
+  <!-- "R" letter mark (subtle brand) -->
+  <text x="128" y="210" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" 
+        font-size="18" font-weight="bold" fill="#4FC3F7" opacity="0.6" letter-spacing="2">R</text>
+</svg>

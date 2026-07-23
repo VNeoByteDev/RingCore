@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RingCore Security Guardian — 下一代智能防御引擎</title>
+    <meta name="description" content="RingCore Security Guardian — 23类启发式分析引擎、172+真实恶意软件特征库、实时盾防护。开源、免费、无订阅。">
+    <meta name="theme-color" content="#080C16">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080C16;
+            --bg-card: #0E1525;
+            --bg-card-hover: #121A2E;
+            --accent: #06B6D4;
+            --accent-light: #22D3EE;
+            --accent-dim: #0891B2;
+            --danger: #EF4444;
+            --success: #10B981;
+            --warn: #F59E0B;
+            --text: #F1F5F9;
+            --text-2: #94A3B8;
+            --text-3: #475569;
+            --text-4: #334155;
+            --border: #1A2332;
+            --border-light: #253040;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1A2332; border-radius: 3px; }
+
+        .mono { font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace; }
+
+        /* ═══ Navigation ═══ */
+        .nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(8,12,22,0.8);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: background 0.3s;
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between; height: 64px;
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-brand svg { width: 28px; height: 28px; }
+        .nav-brand span { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: 0.3px; }
+        .nav-brand em { font-style: normal; color: var(--accent); }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a {
+            color: var(--text-3); text-decoration: none; font-size: 13px; font-weight: 500;
+            transition: color 0.2s; letter-spacing: 0.2px;
+        }
+        .nav-links a:hover { color: var(--text-2); }
+        .nav-cta {
+            background: var(--accent); color: #fff; border: none; padding: 8px 20px;
+            border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+            text-decoration: none; transition: all 0.2s; letter-spacing: 0.2px;
+        }
+        .nav-cta:hover { background: var(--accent-light); box-shadow: 0 0 20px rgba(6,182,212,0.3); }
+
+        /* ═══ Hero ═══ */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; text-align: center; padding: 120px 24px 80px;
+            position: relative; overflow: hidden;
+        }
+        .hero-glow {
+            position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%);
+            width: 800px; height: 800px; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 60%);
+        }
+        .hero-grid {
+            position: absolute; inset: 0; pointer-events: none; opacity: 0.03;
+            background-image:
+                linear-gradient(rgba(6,182,212,0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6,182,212,0.3) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+        }
+
+        .hero-status {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15);
+            border-radius: 20px; padding: 6px 16px; margin-bottom: 40px; z-index: 1;
+        }
+        .hero-status .pulse {
+            width: 8px; height: 8px; background: var(--success); border-radius: 50%;
+            box-shadow: 0 0 8px var(--success); animation: pulse 2s ease infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+        .hero-status span { font-size: 12px; font-weight: 600; color: var(--success); letter-spacing: 0.5px; }
+
+        .hero-shield {
+            width: 100px; height: 100px; margin-bottom: 48px; z-index: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+        .hero-shield svg { width: 100%; height: 100%; filter: drop-shadow(0 0 40px rgba(6,182,212,0.25)); }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+        .hero h1 {
+            font-size: clamp(44px, 7vw, 80px); font-weight: 900; line-height: 1.05;
+            margin-bottom: 24px; z-index: 1; letter-spacing: -1px;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, #fff 0%, #94A3B8 40%, var(--accent-light) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero-sub {
+            font-size: 18px; color: var(--text-2); max-width: 560px; margin-bottom: 48px;
+            line-height: 1.7; z-index: 1;
+        }
+        .hero-sub strong { color: var(--text); font-weight: 600; }
+
+        .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; z-index: 1; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px; font-size: 15px;
+            font-weight: 600; border-radius: 12px; cursor: pointer; text-decoration: none;
+            transition: all 0.25s ease; letter-spacing: 0.2px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+            color: #fff; border: none; padding: 14px 32px;
+            box-shadow: 0 4px 24px rgba(6,182,212,0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 40px rgba(6,182,212,0.35);
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+        }
+        .btn-ghost {
+            background: transparent; color: var(--text-2); border: 1px solid var(--border);
+            padding: 14px 28px;
+        }
+        .btn-ghost:hover { border-color: var(--border-light); color: var(--text); background: rgba(255,255,255,0.02); }
+
+        /* ═══ Stats ═══ */
+        .stats {
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            background: rgba(14,21,37,0.6);
+        }
+        .stats-grid {
+            max-width: 1200px; margin: 0 auto; padding: 48px 24px;
+            display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; text-align: center;
+        }
+        .stat-num { font-size: 42px; font-weight: 900; letter-spacing: -1px; }
+        .stat-num.cyan { color: var(--accent); }
+        .stat-num.green { color: var(--success); }
+        .stat-num.white { color: var(--text); }
+        .stat-label { font-size: 13px; color: var(--text-3); margin-top: 8px; font-weight: 500; letter-spacing: 0.3px; }
+
+        /* ═══ Section ═══ */
+        section { padding: 120px 24px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-head { text-align: center; margin-bottom: 72px; }
+        .section-head .tag {
+            display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+            padding: 4px 12px; background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.1);
+            border-radius: 4px;
+        }
+        .section-head h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px; }
+        .section-head p { font-size: 16px; color: var(--text-2); max-width: 520px; margin: 0 auto; }
+
+        /* ═══ Features ═══ */
+        .features { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        .feature {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 32px; transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .feature::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(6,182,212,0), transparent);
+            transition: background 0.3s;
+        }
+        .feature:hover {
+            border-color: rgba(6,182,212,0.15); transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .feature:hover::before { background: linear-gradient(90deg, transparent, rgba(6,182,212,0.4), transparent); }
+        .feature-icon {
+            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+            background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.08);
+            border-radius: 10px; margin-bottom: 20px; font-size: 20px;
+        }
+        .feature h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .feature p { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+        /* ═══ Engine ═══ */
+        .engine { background: linear-gradient(180deg, var(--bg), #0B1020, var(--bg)); }
+        .engine-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+        .engine-viz {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 28px;
+        }
+        .bar-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+        .bar-row + .bar-row { border-top: 1px solid rgba(255,255,255,0.02); }
+        .bar-label { font-size: 12px; color: var(--text-2); width: 140px; flex-shrink: 0; font-weight: 500; }
+        .bar-track { flex: 1; height: 5px; background: #0A0F1A; border-radius: 3px; overflow: hidden; }
+        .bar-fill {
+            height: 100%; border-radius: 3px; width: 0%;
+            background: linear-gradient(90deg, var(--accent-dim), var(--accent-light));
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .bar-fill.animate { width: var(--w); }
+        .bar-pct { font-size: 12px; color: var(--accent); width: 44px; text-align: right; font-weight: 600; }
+
+        .engine-text h2 { font-size: 32px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .engine-text p { font-size: 15px; color: var(--text-2); margin-bottom: 28px; line-height: 1.7; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag-sm {
+            font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 16px;
+            background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.08);
+            color: var(--accent); letter-spacing: 0.3px;
+        }
+
+        /* ═══ Architecture ═══ */
+        .arch { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .arch-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+        .arch-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+            padding: 28px; text-align: center;
+        }
+        .arch-card .arch-num {
+            font-size: 36px; font-weight: 900; color: var(--accent); opacity: 0.15;
+            margin-bottom: 12px;
+        }
+        .arch-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+        .arch-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+        /* ═══ Download ═══ */
+        .download { text-align: center; }
+        .download-box {
+            background: linear-gradient(135deg, #0C1828 0%, #0F2240 50%, #0C1828 100%);
+            border: 1px solid rgba(6,182,212,0.12); border-radius: 24px;
+            padding: 72px 48px; max-width: 680px; margin: 0 auto; position: relative; overflow: hidden;
+        }
+        .download-box::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        .download-box::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(6,182,212,0.3), transparent);
+        }
+        .download-box h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+        .download-box p { font-size: 15px; color: var(--text-2); margin-bottom: 36px; }
+        .download-meta {
+            display: flex; justify-content: center; gap: 32px; margin-top: 28px;
+            font-size: 13px; color: var(--text-3); font-weight: 500;
+        }
+        .download-meta span { display: flex; align-items: center; gap: 6px; }
+
+        /* ═══ Footer ═══ */
+        footer {
+            border-top: 1px solid var(--border); padding: 40px 24px;
+        }
+        .footer-inner {
+            max-width: 1200px; margin: 0 auto; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .footer-inner p { font-size: 13px; color: var(--text-3); }
+        .footer-links { display: flex; gap: 20px; }
+        .footer-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text-2); }
+
+        /* ═══ Scroll Animations ═══ */
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .hero-shield { animation: none; }
+            .hero-status .pulse { animation: none; }
+        }
+
+        /* ═══ Responsive ═══ */
+        @media (max-width: 900px) {
+            .features, .arch-grid { grid-template-columns: 1fr; }
+            .engine-layout { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+            .nav-links { display: none; }
+            .download-box { padding: 48px 24px; }
+            .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══ Navigation ═══ -->
+<nav class="nav" id="nav">
+    <div class="nav-inner">
+        <a href="#" class="nav-brand">
+            <svg viewBox="0 0 28 28" fill="none">
+                <path d="M14 1L3 6v7c0 6.5 4.7 12.5 11 14 6.3-1.5 11-7.5 11-14V6L14 1z" fill="url(#g1)" stroke="#22D3EE" stroke-width="0.8"/>
+                <path d="M10 14l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs><linearGradient id="g1" x1="3" y1="1" x2="25" y2="21"><stop stop-color="#0891B2"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs>
+            </svg>
+            <span>Ring<em>Core</em></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#engine">Engine</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#download">Download</a></li>
+        </ul>
+        <a href="#download" class="nav-cta">Download v1.0</a>
+    </div>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero" id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-shield">
+        <svg viewBox="0 0 100 100" fill="none">
+            <defs>
+                <linearGradient id="hg" x1="15" y1="8" x2="85" y2="92"><stop stop-color="#0891B2"/><stop offset="1" stop-color="#22D3EE"/></linearGradient>
+                <linearGradient id="hf" x1="15" y1="8" x2="85" y2="92"><stop stop-color="rgba(8,145,178,0.12)"/><stop offset="1" stop-color="rgba(34,211,238,0.03)"/></linearGradient>
+            </defs>
+            <path d="M50 5L12 22v20c0 22 15 42 38 48 23-6 38-26 38-48V22L50 5z" fill="url(#hf)" stroke="url(#hg)" stroke-width="1.5"/>
+            <path d="M35 50l12 12 22-22" stroke="#22D3EE" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <div class="hero-status">
+        <span class="pulse"></span>
+        <span>SHIELD ACTIVE</span>
+    </div>
+
+    <h1><span class="gradient">RingCore Security</span><br>Guardian</h1>
+    <p class="hero-sub">下一代智能防御引擎。<strong>23类启发式分析</strong>精准识别威胁，<strong>172+真实特征库</strong>零误报。实时监控，自动隔离，开源免费。</p>
+
+    <div class="hero-actions">
+        <a href="#download" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            立即下载 v1.0
+        </a>
+        <a href="https://github.com/VNeoByteDev/RingCore" class="btn btn-ghost" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+        </a>
+    </div>
+</section>
+
+<!-- ═══ Stats ═══ -->
+<div class="stats">
+    <div class="stats-grid">
+        <div class="reveal"><div class="stat-num cyan" data-count="172">0</div><div class="stat-label">真实恶意软件特征</div></div>
+        <div class="reveal reveal-delay-1"><div class="stat-num white" data-count="23">0</div><div class="stat-label">启发式检测类别</div></div>
+        <div class="reveal reveal-delay-2"><div class="stat-num green" data-count="100">0</div><div class="stat-label">% 开源免费</div></div>
+        <div class="reveal reveal-delay-3"><div class="stat-num cyan" data-count="0">0</div><div class="stat-label">虚假签名 / 误报</div></div>
+    </div>
+</div>
+
+<!-- ═══ Features ═══ -->
+<section id="features">
+    <div class="container">
+        <div class="section-head reveal">
+            <div class="tag">Features</div>
+            <h2>全方位安全防护</h2>
+            <p>从实时监控到深度扫描，每一层防御都经过精心设计。</p>
+        </div>
+        <div class="features">
+            <div class="feature reveal">
+                <div class="feature-icon">&#9889;</div>
+                <h3>实时盾防护</h3>
+                <p>后台服务 7x24 小时监控文件系统变化，新威胁在毫秒级被检测并自动隔离，零延迟响应。</p>
+            </div>
+            <div class="feature reveal reveal-delay-1">
+                <div class="feature-icon">&#9878;</div>
+                <h3>23 类启发式引擎</h3>
+                <p>勒索软件、凭证窃取、持久化、LotL、C2、数据外泄、Shellcode、加密混淆 — 通过行为而非签名识别威胁。</p>
+            </div>
+            <div class="feature reveal reveal-delay-2">
+                <div class="feature-icon">&#128273;</div>
+                <h3>SHA256 特征库</h3>
+                <p>172+ 条从真实样本提取的 SHA256 哈希。零虚构条目。每条签名都经过验证。</p>
+            </div>
+            <div class="feature reveal">
+                <div class="feature-icon">&#128196;</div>
+                <h3>右键扫描集成</h3>
+                <p>在 Windows 资源管理器中右键即可扫描任意文件、文件夹和压缩包（ZIP / RAR / 7z）。</p>
+            </div>
+            <div class="feature reveal reveal-delay-1">
+                <div class="feature-icon">&#128737;</div>
+                <h3>自动隔离恢复</h3>
+                <p>检测到威胁后毫秒级移入安全隔离区，支持一键恢复。误报零损失。</p>
+            </div>
+            <div class="feature reveal reveal-delay-2">
+                <div class="feature-icon">&#128065;</div>
+                <h3>文件夹实时监控</h3>
+                <p>选择任意文件夹开启监控，新增或修改的文件自动触发扫描。危险行为即刻拦截。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ Engine ═══ -->
+<section id="engine" class="engine">
+    <div class="container">
+        <div class="engine-layout">
+            <div class="engine-viz reveal">
+                <div class="bar-row"><span class="bar-label">熵分析</span><div class="bar-track"><div class="bar-fill" style="--w:85%"></div></div><span class="bar-pct">23%</span></div>
+                <div class="bar-row"><span class="bar-label">API 导入分析</span><div class="bar-track"><div class="bar-fill" style="--w:78%"></div></div><span class="bar-pct">20%</span></div>
+                <div class="bar-row"><span class="bar-label">Shellcode 检测</span><div class="bar-track"><div class="bar-fill" style="--w:92%"></div></div><span class="bar-pct">25%</span></div>
+                <div class="bar-row"><span class="bar-label">PE 头部异常</span><div class="bar-track"><div class="bar-fill" style="--w:70%"></div></div><span class="bar-pct">18%</span></div>
+                <div class="bar-row"><span class="bar-label">字符串 / 模式匹配</span><div class="bar-track"><div class="bar-fill" style="--w:65%"></div></div><span class="bar-pct">14%</span></div>
+            </div>
+            <div class="engine-text reveal">
+                <div class="tag" style="display:inline-block;margin-bottom:20px">Engine</div>
+                <h2>不止于签名。<br>真正的智能分析。</h2>
+                <p>Shield 引擎跨 23 个独立类别分析文件 — 从熵值和 Shellcode 模式到勒索软件行为和凭证窃取 API。只有触发 3+ 个类别的文件才会被标记，消除误报的同时捕获真实威胁。</p>
+                <div class="tags">
+                    <span class="tag-sm">勒索软件</span>
+                    <span class="tag-sm">凭证窃取</span>
+                    <span class="tag-sm">持久化</span>
+                    <span class="tag-sm">LotL</span>
+                    <span class="tag-sm">C2 通信</span>
+                    <span class="tag-sm">数据外泄</span>
+                    <span class="tag-sm">Shellcode</span>
+                    <span class="tag-sm">加密混淆</span>
+                    <span class="tag-sm">PE 异常</span>
+                    <span class="tag-sm">脚本混淆</span>
+                    <span class="tag-sm">注册表行为</span>
+                    <span class="tag-sm">进程行为</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ Architecture ═══ -->
+<section id="architecture" class="arch">
+    <div class="container">
+        <div class="section-head reveal">
+            <div class="tag">Architecture</div>
+            <h2>多层防御架构</h2>
+            <p>每一层独立运行，协同构成纵深防御体系。</p>
+        </div>
+        <div class="arch-grid">
+            <div class="arch-card reveal">
+                <div class="arch-num">01</div>
+                <h4>Layer 1 — 特征匹配</h4>
+                <p>172+ SHA256 哈希与内置特征库 + ThreatDB 外部库双重比对，毫秒级完成。</p>
+            </div>
+            <div class="arch-card reveal reveal-delay-1">
+                <div class="arch-num">02</div>
+                <h4>Layer 2 — 启发式分析</h4>
+                <p>23 个检测类别独立评分，3+ 类别同时触发才判定威胁，精准过滤误报。</p>
+            </div>
+            <div class="arch-card reveal reveal-delay-2">
+                <div class="arch-num">03</div>
+                <h4>Layer 3 — 实时响应</h4>
+                <p>QFileSystemWatcher 监控文件变化，检测到威胁自动隔离并弹出告警通知。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ Download ═══ -->
+<section id="download" class="download">
+    <div class="container">
+        <div class="download-box reveal">
+            <h2>下载 RingCore Security Guardian</h2>
+            <p>免费、开源、无订阅、无数据收集。保护你的 Windows PC。</p>
+            <a href="https://github.com/VNeoByteDev/RingCore/releases" class="btn btn-primary" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                下载 v1.0.0 安装包
+            </a>
+            <div class="download-meta">
+                <span>Windows 10/11 (64-bit)</span>
+                <span>11 MB</span>
+                <span>开源免费</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+    <div class="footer-inner">
+        <p>&copy; 2026 RingCore Security &middot; Built with Qt 6 + C++</p>
+        <div class="footer-links">
+            <a href="https://github.com/VNeoByteDev/RingCore" target="_blank">GitHub</a>
+            <a href="https://github.com/VNeoByteDev/RingCore/issues" target="_blank">Issues</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+// ═══ Scroll reveal ═══
+const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ═══ Animated counters ═══
+function animateCounter(el) {
+    const target = +el.dataset.count;
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * ease);
+        if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
+const counterIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) { animateCounter(e.target); counterIO.unobserve(e.target); }
+    });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => counterIO.observe(el));
+
+// ═══ Bar animation ═══
+const barIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.querySelectorAll('.bar-fill').forEach(bar => bar.classList.add('animate'));
+            barIO.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.3 });
+document.querySelectorAll('.engine-viz').forEach(el => barIO.observe(el));
+
+// ═══ Nav blur on scroll ═══
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('nav');
+    nav.style.background = window.scrollY > 50 ? 'rgba(8,12,22,0.92)' : 'rgba(8,12,22,0.8)';
+}, { passive: true });
+</script>
+
+</body>
+</html>
